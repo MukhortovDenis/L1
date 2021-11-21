@@ -12,13 +12,12 @@ func square(mas [5]int, i int) int {
 func main() {
 	var wg sync.WaitGroup
 	mas := [5]int{2, 4, 6, 8, 10}
-	// mas1 := [5]int{}
 	ch := make(chan int, 5)
 	for i := 0; i <= 4; i++ {
+		wg.Add(1)
 		go func(i int) {
-			wg.Add(1)
+			defer wg.Done()
 			ch <- square(mas, i)
-			wg.Done()
 		}(i)
 	}
 	wg.Wait()
