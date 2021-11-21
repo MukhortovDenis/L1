@@ -4,38 +4,48 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"os/signal"
+	"sync"
+	"syscall"
 )
 
 var workersNumber int
 
 func main() {
-	ctx := context.Background()
-	ctx, cancel := context.WithCancel(ctx)
+	var wg sync.WaitGroup
+	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT)
+	defer stop()
 	workersNumber = 10
 	ch := make(chan int, 1)
+	exitChan := make(chan struct{}, 1)
 	go func() {
 		for i := 0; workersNumber > i; i++ {
-			go func(ctx context.Context, i int) {
+			wg.Add(1)
+			go func(i int, ext chan struct{}) {
 			LOOP:
 				for {
 					select {
 					case <-ctx.Done():
 						fmt.Fprintln(os.Stdout, "Горутина", i, "отработала")
+						wg.Done()
 						break LOOP
-					default:
-						fmt.Fprintln(os.Stdout, <-ch)
+					case a := <-ch:
+						fmt.Fprintln(os.Stdout, a)
 					}
 				}
-			}(ctx, i)
+				ext <- struct{}{}
+			}(i, exitChan)
 		}
 	}()
-	defer cancel()
+LOOP1:
 	for i := 0; ; i++ {
 		select {
-		case <-ctx.Done():
-			break
+		case <-exitChan:
+			break LOOP1
 		default:
 			ch <- i
 		}
 	}
+	wg.Wait()
+	fmt.Fprintln(os.Stdout, "Программа отработала")
 }
