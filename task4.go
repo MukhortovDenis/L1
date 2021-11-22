@@ -16,8 +16,10 @@ func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT)
 	defer stop()
 	workersNumber = 10
-	ch := make(chan int, 1)
+	ch := make(chan int)
+	defer close(ch)
 	exitChan := make(chan struct{}, 1)
+	defer close(exitChan)
 	go func() {
 		for i := 0; workersNumber > i; i++ {
 			wg.Add(1)
@@ -26,7 +28,7 @@ func main() {
 				for {
 					select {
 					case <-ctx.Done():
-						fmt.Fprintln(os.Stdout, "Горутина", i, "отработала")
+						fmt.Println("Горутина", i, "отработала")
 						wg.Done()
 						break LOOP
 					case a := <-ch:
@@ -42,10 +44,10 @@ LOOP1:
 		select {
 		case <-exitChan:
 			break LOOP1
-		default:
-			ch <- i
+		case ch <- i:
+			
 		}
 	}
 	wg.Wait()
-	fmt.Fprintln(os.Stdout, "Программа отработала")
+	fmt.Println("Программа отработала")
 }
