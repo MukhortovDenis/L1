@@ -45,7 +45,6 @@ LOOP1:
 		case <-exitChan:
 			break LOOP1
 		case ch <- i:
-			
 		}
 	}
 	wg.Wait()
