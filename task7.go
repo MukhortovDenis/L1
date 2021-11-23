@@ -14,7 +14,7 @@ func main() {
 		go func(counters map[int]int, i int, mu *sync.Mutex) {
 			for j := 0; j < 5; j++ {
 				mu.Lock()
-				counters[i+j] = j
+				counters[i*10+j] = j
 				mu.Unlock()
 			}
 			wg.Done()
