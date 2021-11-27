@@ -6,8 +6,7 @@ import (
 
 func main() {
 	a := []int{23, 52, 154, 1, 65, 76, 89, 34, 22}
-	quicksort(a)
-	fmt.Println(a)
+	fmt.Print(quicksort(a))
 }
 
 func quicksort(a []int) []int{
@@ -24,7 +23,6 @@ func quicksort(a []int) []int{
 		n = (l + r + 1) / 2
 	}
 	a[n], a[r] = a[r], a[n]
-	fmt.Print(a)
 	for i := range a{
 		if a[i] < a[r]{
 			a[l], a[i] = a[i], a[l]
@@ -32,10 +30,9 @@ func quicksort(a []int) []int{
 		}
 	}
 	a[l], a[r] = a[r], a[l]
-	fmt.Print(a)
 	//рекурсивно выполняем сортировку для кусков
 	quicksort(a[:l])
 	quicksort(a[l+1:])
-	
+
 	return a
 }
