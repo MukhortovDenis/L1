@@ -21,7 +21,7 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 	for i := 0; i < gorNum; i++ {
-		go func(ctx context.Context) {
+		go func(ctx context.Context, counter *Counter) {
 			wg.Add(1)
 			for {
 				select {
@@ -34,7 +34,7 @@ func main() {
 					counter.mu.Unlock()
 				}
 			}
-		}(ctx)
+		}(ctx, &counter)
 	}
 	wg.Wait()
 	fmt.Print(counter.count)
