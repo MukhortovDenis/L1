@@ -10,6 +10,7 @@ func main() {
 	fmt.Println("Укажите индекс двух чисел, которых хотите поменять местами")
 	var a, b int
 	fmt.Fscan(os.Stdin, &a, &b)
+	// Так можно просто поменять значения местами, просто дать им другое значение
 	list[a], list[b] = list[b], list[a]
 	fmt.Println(list)
 }

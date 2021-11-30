@@ -4,11 +4,13 @@ import "fmt"
 
 func main() {
     a1 := []string{"cat", "cat", "dog", "cat", "tree"}
-    a2 := newSet(a1)
-    fmt.Println(a2)
+    // Переопределяем a1
+    a1 = newSet(a1)
+    fmt.Println(a1)
 }
 
 func newSet(a1 []string) []string {
+    //Проверка по мапе с булевыми значениями
     keys := make(map[string]bool)
     a2 := []string{}	
     for _, str := range a1 {
@@ -19,6 +21,7 @@ func newSet(a1 []string) []string {
 			// Устанавливаем для этого ключа значение true,
 			// Чтобы следующая  строка равная одной из предыдущих не проходила условие
             keys[str] = true
+            // Пишем значение в слайс
             a2 = append(a2, str)
         }
     }    

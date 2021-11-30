@@ -5,17 +5,17 @@ import (
 	"math"
 	"os"
 )
-
+// Структура точек
 type Point struct {
 	X float64
 	Y float64
 }
-
+// Функция подсчета дистанции между точками
 func distance(A *Point, B *Point) float64 {
 	dist := math.Sqrt(math.Pow((B.X-A.X), 2) + math.Pow((B.Y-A.Y), 2))
 	return dist
 }
-
+// Конструктор, для которого вводим координаты точек через консоль
 func NewPoint() *Point {
 	p := new(Point)
 	var a, b float64

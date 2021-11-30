@@ -5,26 +5,35 @@ import (
 )
 
 func main() {
+	// важно чтобы был отсортированный массив или слайс
 	items := []int{1, 2, 9, 20, 31, 45, 63, 70, 100}
-	fmt.Println(binarySearch(20, items))
+	fmt.Println(binSearch(20, items))
 }
 
-func binarySearch(needle int, haystack []int) bool {
-
-	low := 0
-	high := len(haystack) - 1
-
-	for low <= high {
-		median := (low + high) / 2
-
-		if haystack[median] < needle {
-			low = median + 1
+func binSearch(num int, haystack []int) bool {
+	// Так же назначаем границы слайса
+	l := 0
+	r := len(haystack) - 1
+	// пока индекс левого меньше индекса правого цикл работает
+	// после каждого раза либо один либо другой индекс будет сдвигаться
+	// рано или поздно условие не выполнится
+	for l <= r {
+		// Выбираем элемент между левым и правым
+		n := (l + r) / 2
+		fmt.Println(n)
+		// Если элемент меньше искомого числа, то:
+		if haystack[n] < num {
+			// индекс левого увеличиваем
+			l = n + 1
+			// Иначе
 		} else {
-			high = median - 1
+			// индекс правого увеличиваем
+			r = n - 1
 		}
 	}
-
-	if low == len(haystack) || haystack[low] != needle {
+	// В результате мы получим(если такое чисто есть) то, что левый элемент будет равен искомому числу
+	// В другом случае индекс l выйдет за возможное значение или просто цикл остановится, но l не будет индексом искомого числа
+	if l == len(haystack) || haystack[l] != num {
 		return false
 	}
 

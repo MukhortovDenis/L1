@@ -8,11 +8,13 @@ import (
 
 func main() {
 	var i int64
+	// Возможно, можно было сделать получения числа в бинарном виде иначе, но мне захотелось
+	// вспомнить, как они переводятся из десятичной в двоичную
+	// Поэтому сделал именно так
+	fmt.Print("Введите число\n")
 	fmt.Fscan(os.Stdin, &i)
+	// Тут получаем слайс нашего числа в виде 0 и 1
 	x := intToBit(i)
-	for i, j := 0, len(x)-1; i < j; i, j = i+1, j-1 {
-		x[i], x[j] = x[j], x[i]
-	}
 	fmt.Println(x)
 	fmt.Println("Укажите какой бит и какое значени вы хотите поместить")
 	var a, b int64
@@ -26,13 +28,16 @@ func main() {
 		fmt.Println("out of range")
 		return
 	}
+	// Меняем значение элемента слайса
 	x[a] = b
 	fmt.Println(x)
 	var newnumb int64 = 0
+	// Переводим обратно в десятичную
 	i = bitToInt(x, l, newnumb)
 	fmt.Println(i)
 
 }
+// Функция перевода с десятичной в двоичную
 func intToBit(i int64) []int64 {
 	s := make([]int64, 0)
 	for {
@@ -46,10 +51,14 @@ func intToBit(i int64) []int64 {
 			s = append(s, i)
 			i = i - i
 		} else {
+			for i, j := 0, len(s)-1; i < j; i, j = i+1, j-1 {
+				s[i], s[j] = s[j], s[i]
+			}
 			return s
 		}
 	}
 }
+// Функция перевода с двоичной в десятичную
 func bitToInt(x []int64, l int64, newnumb int64) int64 {
 	for i := range x {
 		newnumb += x[i] * int64(math.Pow(2, float64(l)-1))
